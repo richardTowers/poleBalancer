@@ -80,7 +80,7 @@ $(function () {
 
 	// Embiggen the canvas:
 	$('#cart').attr('width', (windowWidth - 40) + 'px');
-	$('#cart').attr('height', (windowHeight - 40) + 'px');
+	$('#cart').attr('height', (200) + 'px');
 
 	var time = 0;
 	var cartMass = 0.5;
@@ -90,9 +90,9 @@ $(function () {
 		/*velocity:*/ 0,
 		/*acceleration:*/ 0,
 		/*pole:*/ new Pole(
-			/*mass*/  0.001,
-			/*length:*/ 50,
-			/*angle:*/ 0.001,
+			/*mass*/  0.1,
+			/*length:*/ 5,
+			/*angle:*/ 0.1 * (Math.random() - 0.5),
 			/*velocity*/ 0,
 			/*acceleration*/ 0,
 			/*cartMass*/ cartMass));
@@ -107,6 +107,7 @@ $(function () {
 
 	var context = canvas.getContext('2d');
 	context.fillStyle = 'rgb(0,0,0)';
+	context.lineWidth = 3;
 
 	var force = 0;
 	
@@ -135,12 +136,13 @@ $(function () {
 	function drawFrame (cart: Cart) {
 		drawBackground();
 		context.fillRect(cart.position, canvas.height - 80, 50, 50);
+
+		var x = 100 * Math.cos(cart.pole.angle - Math.PI / 2);
+		var	y = 100 * Math.sin(cart.pole.angle - Math.PI / 2);
+
+		context.beginPath();
 		context.moveTo(cart.position + 30, canvas.height - 80);
-		var tip = {
-			x: 100 * Math.cos(cart.pole.angle - Math.PI / 2),
-			y: 100 * Math.sin(cart.pole.angle - Math.PI / 2)
-		}
-		context.lineTo(cart.position + 30 + tip.x, canvas.height - 80 + tip.y);
+		context.lineTo(cart.position + 30 + x, canvas.height - 80 + y);
 		context.stroke();
 	}
 

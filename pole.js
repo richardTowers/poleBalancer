@@ -47,10 +47,10 @@ $(function () {
     var windowWidth = $(window).width();
     var windowHeight = $(window).height();
     $('#cart').attr('width', (windowWidth - 40) + 'px');
-    $('#cart').attr('height', (windowHeight - 40) + 'px');
+    $('#cart').attr('height', (200) + 'px');
     var time = 0;
     var cartMass = 0.5;
-    var cart = new Cart(cartMass, windowWidth / 2 - 90, 0, 0, new Pole(0.001, 50, 0.001, 0, 0, cartMass));
+    var cart = new Cart(cartMass, windowWidth / 2 - 90, 0, 0, new Pole(0.1, 5, 0.1 * (Math.random() - 0.5), 0, 0, cartMass));
     var canvas = document.getElementById('cart');
     if(!canvas) {
         return;
@@ -59,6 +59,7 @@ $(function () {
     var canvasHeight = canvas.height;
     var context = canvas.getContext('2d');
     context.fillStyle = 'rgb(0,0,0)';
+    context.lineWidth = 3;
     var force = 0;
     $(document).keydown(function (e) {
         if(e.keyCode == 37) {
@@ -83,12 +84,11 @@ $(function () {
     function drawFrame(cart) {
         drawBackground();
         context.fillRect(cart.position, canvas.height - 80, 50, 50);
+        var x = 100 * Math.cos(cart.pole.angle - Math.PI / 2);
+        var y = 100 * Math.sin(cart.pole.angle - Math.PI / 2);
+        context.beginPath();
         context.moveTo(cart.position + 30, canvas.height - 80);
-        var tip = {
-            x: 100 * Math.cos(cart.pole.angle - Math.PI / 2),
-            y: 100 * Math.sin(cart.pole.angle - Math.PI / 2)
-        };
-        context.lineTo(cart.position + 30 + tip.x, canvas.height - 80 + tip.y);
+        context.lineTo(cart.position + 30 + x, canvas.height - 80 + y);
         context.stroke();
     }
     function drawBackground() {
