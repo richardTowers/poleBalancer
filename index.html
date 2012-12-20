@@ -14,9 +14,11 @@
 		</div>
 		<div class="container">
 			<h1>The Pole Balancing Problem</h1>
-			<p>The pole balancing problem is a classic in control theory. The case I've set up here is very simple, push the cart left or right in order to balance the pole. Plan is to get you a little textarea where you can write some code to balance the pole.</p>
+			<p>The pole balancing problem is a classic in control theory. The case I've set up here is very simple, push the cart left or right in order to balance the pole.</p>
+			<p>You can also write some code in the editor below to control the motiion of the pole. A good controller should be able to keep the pole
+				balanced and the cart central, even if you nudge it with <kbd>left</kbd> or <kbd>right</kbd>.</p>
 			<h3>Instructions</h3>
-			<p>Click start to get going. Press <kbd>left</kbd> and <kbd>right</kbd> (on the keyboard or the buttons) to control the cart. Try to keep the poll upright for as long as possible.</p>
+			<p>Write some JavaScript to keep the poll upright and the cart central for as long as possible. You can nudge the cart with <kbd>left</kbd> and <kbd>right</kbd> (on the keyboard or the buttons). Click start to get going.</p>
 			<canvas id="cart">
 				<p>Sorry, your browser doesn't support canvas. We don't need your sort here.</p>
 				<img src="http://weknowmemes.com/wp-content/uploads/2012/05/go-be-fat-somewhere-else.jpg" alt="Sorry!" title="Sorry!">
@@ -42,8 +44,8 @@
 
 // You're also free to use methods like console.log() to help you out, if your browser supports them.
 
-// Simple example:
-return 100*angle;</textarea>
+// Trivial example:
+return 0;</textarea>
 		</div>
 		<script src="scripts/lib/jquery.js"></script>
 		<script src="scripts/lib/codemirror.js"></script>
