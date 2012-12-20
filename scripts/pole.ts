@@ -123,7 +123,8 @@ $(() => {
 			cart.position + cart.width > canvasWidth ||
 			cart.pole.angle > Math.PI/2 ||
 			cart.pole.angle < -Math.PI/2 ) {
-			window.alert('FAIL! You lasted ' + Math.round(elapsed) + ' seconds');
+			$('#failTime').text(Math.round(elapsed));
+			$('#failModal').modal();
 		}
 		else {
 			timeout = setTimeout(() => { animate(cart, controller); }, Math.round(1000*timestep));

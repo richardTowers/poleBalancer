@@ -91,7 +91,8 @@ $(function () {
         cart.tick(force);
         elapsed += timestep;
         if(cart.position < 0 || cart.position + cart.width > canvasWidth || cart.pole.angle > Math.PI / 2 || cart.pole.angle < -Math.PI / 2) {
-            window.alert('FAIL! You lasted ' + Math.round(elapsed) + ' seconds');
+            $('#failTime').text(Math.round(elapsed));
+            $('#failModal').modal();
         } else {
             timeout = setTimeout(function () {
                 animate(cart, controller);
