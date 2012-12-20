@@ -67,6 +67,15 @@ $(function () {
             force = -100;
         }
     });
+    $('#left').mousedown(function () {
+        force = -100;
+    });
+    $('#right').mousedown(function () {
+        force = 100;
+    });
+    $('#left,#right').mouseup(function () {
+        force = 0;
+    });
     $(document).keydown(function (e) {
         if(e.keyCode == 39) {
             force = 100;

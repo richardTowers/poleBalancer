@@ -47,6 +47,8 @@ class Cart {
 	}
 
 	tick(force: number) {
+		// Calculate the pole first, since we're going to use some data from the pole
+		// to work out the cart's position.
 		this.pole.tick(force);
 
 		// Calculate new acceleration
@@ -118,6 +120,10 @@ $(function () {
 	       force = -100;
 	    }
 	});
+
+	$('#left').mousedown(function () {force = -100;});
+	$('#right').mousedown(function () {force = 100;});
+	$('#left,#right').mouseup(function () {force = 0;});
 
 	$(document).keydown(function(e){
 	    if (e.keyCode == 39) { 
