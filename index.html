@@ -39,8 +39,8 @@
 // Simply return a force to apply to the cart. Negative to push it left, positive to push it right.
 
 // If you need to hold on to some state you can use the global `state` variable. For example:
-//      state.property = state.property || 1;
-//      state.property++;
+//      if(typeof state.counter === "undefined") { state.counter = 0; }
+//      state.counter++;
 
 // You're also free to use methods like console.log() to help you out, if your browser supports them.
 
