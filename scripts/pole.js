@@ -45,10 +45,10 @@ var Cart = (function () {
 $(function () {
     'use strict';
     var elapsed = 0;
-    var windowWidth = $(window).width();
-    var windowHeight = $(window).height();
-    $('#cart').attr('width', (windowWidth - 40) + 'px');
-    $('#cart').attr('height', (200) + 'px');
+    var windowWidth = $('.container').width();
+    var windowHeight = $('.container').height();
+    $('#cart').attr('width', windowWidth + 'px');
+    $('#cart').attr('height', 200 + 'px');
     var time = 0;
     var cartMass = 0.5;
     var cart = new Cart(cartMass, windowWidth / 2 - 90, 0, 0, new Pole(0.1, 5, 0.1 * (Math.random() - 0.5), 0, 0, cartMass));

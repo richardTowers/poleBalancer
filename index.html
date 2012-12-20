@@ -2,26 +2,34 @@
 <html>
 	<head>
 		<title>Balance the poll!</title>
-		<link rel="stylesheet" href="pole.css">
-		<script src="jquery-1.8.3.min.js"></script>
-		<script src="pole.js"></script>
+		<link rel="stylesheet" href="styles/lib/bootstrap.min.css">
+		<link rel="stylesheet" href="styles/pole.css">
+		<script src="scripts/lib/jquery.js"></script>
+		<script src="scripts/pole.js"></script>
 	</head>
 	<body>
-		<h1>The Pole Balancing Problem</h1>
-		<p>The pole balancing problem is a classic in control theory. The case I've set up here is very simple, push the cart left or right in order to balance the pole. Plan is to get you a little textarea where you can write some code to balance the pole.</p>
-		<h3>Instructions</h3>
-		<p>Click start to get going. Press <kbd>left</kbd> and <kbd>right</kbd> (on the keyboard or the buttons) to control the cart. Try to keep the poll upright for as long as possible.</p>
-		<canvas id="cart">
-			<p>Sorry, your browser doesn't support canvas. We don't need your sort here.</p>
-			<img src="http://weknowmemes.com/wp-content/uploads/2012/05/go-be-fat-somewhere-else.jpg" alt="Sorry!" title="Sorry!">
-		</canvas>
-
-		<fieldset>
-			<input type="button" value="left" id="left" disabled>
-			<input type="button" value="Start" id="start">
-			<input type="button" value="right" id="right" disabled>
-		</fieldset>
-
-		<textarea name="code" id="" cols="30" rows="10"></textarea>
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<a class="brand" href="/">richard-towers.com</a>
+			</div>
+		</div>
+		<div class="container">
+			<h1>The Pole Balancing Problem</h1>
+			<p>The pole balancing problem is a classic in control theory. The case I've set up here is very simple, push the cart left or right in order to balance the pole. Plan is to get you a little textarea where you can write some code to balance the pole.</p>
+			<h3>Instructions</h3>
+			<p>Click start to get going. Press <kbd>left</kbd> and <kbd>right</kbd> (on the keyboard or the buttons) to control the cart. Try to keep the poll upright for as long as possible.</p>
+			<canvas id="cart">
+				<p>Sorry, your browser doesn't support canvas. We don't need your sort here.</p>
+				<img src="http://weknowmemes.com/wp-content/uploads/2012/05/go-be-fat-somewhere-else.jpg" alt="Sorry!" title="Sorry!">
+			</canvas>
+			
+			<fieldset>
+				<input type="button" class="btn btn-success" value="left" id="left" disabled>
+				<input type="button" class="btn btn-large btn-primary" value="Start" id="start">
+				<input type="button" class="btn btn-success" value="right" id="right" disabled>
+			</fieldset>
+			
+			<textarea id="code" cols="30" rows="10"></textarea>
+		</div>
 	</body>
 </html>

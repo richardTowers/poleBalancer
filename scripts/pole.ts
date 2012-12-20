@@ -79,12 +79,12 @@ $(() => {
 	'use strict';
 
 	var elapsed = 0;
-	var windowWidth = $(window).width();
-	var windowHeight = $(window).height();
+	var windowWidth = $('.container').width();
+	var windowHeight = $('.container').height();
 
 	// Embiggen the canvas:
-	$('#cart').attr('width', (windowWidth - 40) + 'px');
-	$('#cart').attr('height', (200) + 'px');
+	$('#cart').attr('width', windowWidth + 'px');
+	$('#cart').attr('height', 200 + 'px');
 
 	var time = 0;
 	var cartMass = 0.5;

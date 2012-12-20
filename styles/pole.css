@@ -1,0 +1,20 @@
+fieldset {
+	text-align: center;
+}
+
+canvas {
+	padding-left: 6px;
+	padding-right: 6px;
+}
+
+textarea {
+	width: 100%;
+}
+
+body {
+	padding-top: 40px;
+}
+
+.navbar .brand {
+	margin-left: 0;
+}
