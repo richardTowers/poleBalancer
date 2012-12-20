@@ -22,7 +22,9 @@ var Pole = (function () {
     return Pole;
 })();
 var Cart = (function () {
-    function Cart(mass, position, velocity, acceleration, pole) {
+    function Cart(width, height, mass, position, velocity, acceleration, pole) {
+        this.width = width;
+        this.height = height;
         this.mass = mass;
         this.position = position;
         this.velocity = velocity;
@@ -45,24 +47,21 @@ var Cart = (function () {
 $(function () {
     'use strict';
     var elapsed = 0;
-    var windowWidth = $('.container').width();
-    var windowHeight = $('.container').height();
-    $('#cart').attr('width', windowWidth + 'px');
-    $('#cart').attr('height', 200 + 'px');
+    var canvasWidth = $('.container').width();
+    var canvasHeight = 200;
+    $('#cart').attr('width', canvasWidth + 'px');
+    $('#cart').attr('height', canvasHeight + 'px');
     var time = 0;
     var cartMass = 0.5;
-    var cart = new Cart(cartMass, windowWidth / 2 - 90, 0, 0, new Pole(0.1, 5, 0.1 * (Math.random() - 0.5), 0, 0, cartMass));
+    var cart = new Cart(50, 50, cartMass, canvasWidth / 2 - 25, 0, 0, new Pole(0.1, 5, 0, 0, 0, cartMass));
     var canvas = document.getElementById('cart');
     if(!canvas) {
         return;
     }
-    var canvasWidth = canvas.width;
-    var canvasHeight = canvas.height;
     var context = canvas.getContext('2d');
     context.fillStyle = 'rgb(0,0,0)';
     context.lineWidth = 3;
     var nudge = 0;
-    var timeout;
     $(document).keydown(function (e) {
         if(e.keyCode == 37) {
             nudge = -100;
@@ -85,12 +84,13 @@ $(function () {
     $('#left,#right').bind('touchend mouseup', function () {
         nudge = 0;
     });
+    var timeout;
     function animate(cart, controller) {
         drawFrame(cart);
         var force = nudge + controller(cart.pole.angle, cart.pole.velocity, cart.position - canvasWidth / 2, cart.velocity);
         cart.tick(force);
         elapsed += timestep;
-        if(cart.pole.angle > Math.PI / 2 || cart.pole.angle < -Math.PI / 2) {
+        if(cart.position < 0 || cart.position + cart.width > canvasWidth || cart.pole.angle > Math.PI / 2 || cart.pole.angle < -Math.PI / 2) {
             window.alert('FAIL! You lasted ' + Math.round(elapsed) + ' seconds');
         } else {
             timeout = setTimeout(function () {
@@ -100,19 +100,22 @@ $(function () {
     }
     function drawFrame(cart) {
         drawBackground();
-        context.fillRect(cart.position, canvas.height - 80, 50, 50);
+        context.fillRect(cart.position, canvas.height - 80, cart.width, cart.height);
         var x = 100 * Math.cos(cart.pole.angle - Math.PI / 2);
         var y = 100 * Math.sin(cart.pole.angle - Math.PI / 2);
         context.beginPath();
-        context.moveTo(cart.position + 30, canvas.height - 80);
-        context.lineTo(cart.position + 30 + x, canvas.height - 80 + y);
+        context.moveTo(cart.position + cart.width / 2, canvas.height - 80);
+        context.lineTo(cart.position + cart.width / 2 + x, canvas.height - 80 + y);
         context.stroke();
     }
     function drawBackground() {
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.fillRect(0, canvas.height - 20, canvas.width, 5);
-        context.fillRect(0, canvas.height - 200, 5, 180);
-        context.fillRect(canvas.width - 5, canvas.height - 200, 5, 180);
+        context.beginPath();
+        context.moveTo(context.lineWidth / 2, 0);
+        context.lineTo(context.lineWidth / 2, canvas.height - 20);
+        context.lineTo(canvas.width - context.lineWidth / 2, canvas.height - 20);
+        context.lineTo(canvas.width - context.lineWidth / 2, 0);
+        context.stroke();
     }
     var target = document.getElementById('code');
     var editor = CodeMirror.fromTextArea(target, {
@@ -125,10 +128,10 @@ $(function () {
         };
         var controller = new Function('angle', 'angleRate', 'cartPosition', 'cartVelocity', code);
         $('#left,#right').removeAttr('disabled');
-        elapsed = 0;
         clearTimeout(timeout);
+        elapsed = 0;
         nudge = 0;
-        cart.position = windowWidth / 2 - 90;
+        cart.position = canvasWidth / 2 - cart.width / 2;
         cart.velocity = 0;
         cart.acceleration = 0;
         cart.pole.angle = 0.1 * (Math.random() - 0.5);

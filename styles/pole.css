@@ -7,11 +7,6 @@ canvas {
 	padding-right: 6px;
 }
 
-textarea {
-	margin-top: 10px;
-	width: 100%;
-}
-
 body {
 	padding-top: 40px;
 }
@@ -20,11 +15,16 @@ body {
 	margin-left: 0;
 }
 
+textarea {
+	width: 100%;
+}
+
 .CodeMirror {
-  border: 1px solid #eee;
-  height: auto;
+	margin-top: 10px;
+	border: 1px solid #eee;
+	height: auto;
 }
 .CodeMirror-scroll {
-  overflow-y: hidden;
-  overflow-x: auto;
+	overflow-y: hidden;
+	overflow-x: auto;
 }

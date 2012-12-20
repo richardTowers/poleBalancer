@@ -39,7 +39,10 @@ class Pole {
 }
 
 class Cart {
-	constructor(public mass: number,
+	constructor(
+		public width: number,
+		public height: number,
+		public mass: number,
 		public position: number,
 		public velocity: number,
 		public acceleration: number,
@@ -82,35 +85,19 @@ $(() => {
 	'use strict';
 
 	var elapsed = 0;
-	var windowWidth = $('.container').width();
-	var windowHeight = $('.container').height();
+	var canvasWidth = $('.container').width();
+	var canvasHeight = 200;
 
 	// Embiggen the canvas:
-	$('#cart').attr('width', windowWidth + 'px');
-	$('#cart').attr('height', 200 + 'px');
+	$('#cart').attr('width', canvasWidth + 'px');
+	$('#cart').attr('height', canvasHeight + 'px');
 
 	var time = 0;
 	var cartMass = 0.5;
-	var cart = new Cart(
-		/*mass:*/ cartMass,
-		/*position:*/ windowWidth/2 - 90,
-		/*velocity:*/ 0,
-		/*acceleration:*/ 0,
-		/*pole:*/ new Pole(
-			/*mass*/  0.1,
-			/*length:*/ 5,
-			/*angle:*/ 0.1 * (Math.random() - 0.5),
-			/*velocity*/ 0,
-			/*acceleration*/ 0,
-			/*cartMass*/ cartMass));
+	var cart = new Cart(50, 50, cartMass, canvasWidth / 2 - 25, 0, 0, new Pole(0.1, 5, 0, 0, 0, cartMass));
 
 	var canvas = <HTMLCanvasElement> document.getElementById('cart');
-	if(!canvas)
-	{
-		return;
-	}
-	var canvasWidth = canvas.width;
-	var canvasHeight = canvas.height;
+	if(!canvas) { return; }
 
 	var context = canvas.getContext('2d');
 	context.fillStyle = 'rgb(0,0,0)';
@@ -118,8 +105,6 @@ $(() => {
 
 	var nudge = 0;
 
-	var timeout;
-	
 	$(document).keydown((e) => { if (e.keyCode == 37) { nudge = -100; }	});
 	$(document).keydown((e) => { if (e.keyCode == 39) { nudge = 100; } });
 	$(document).keyup(() => { nudge = 0; });
@@ -128,12 +113,16 @@ $(() => {
 	$('#right').bind('touchstart mousedown', () => { nudge = 100; });
 	$('#left,#right').bind('touchend mouseup', () => { nudge = 0; });
 
+	var timeout;
 	function animate (cart: Cart, controller: any) {
 		drawFrame(cart);
 		var force = nudge + controller(cart.pole.angle, cart.pole.velocity, cart.position - canvasWidth/2, cart.velocity);
 		cart.tick(force);
 		elapsed += timestep;
-		if(cart.pole.angle > Math.PI/2 || cart.pole.angle < -Math.PI/2 ) {
+		if( cart.position < 0 ||
+			cart.position + cart.width > canvasWidth ||
+			cart.pole.angle > Math.PI/2 ||
+			cart.pole.angle < -Math.PI/2 ) {
 			window.alert('FAIL! You lasted ' + Math.round(elapsed) + ' seconds');
 		}
 		else {
@@ -143,45 +132,54 @@ $(() => {
 
 	function drawFrame (cart: Cart) {
 		drawBackground();
-		context.fillRect(cart.position, canvas.height - 80, 50, 50);
+		context.fillRect(cart.position, canvas.height - 80, cart.width, cart.height);
 
 		var x = 100 * Math.cos(cart.pole.angle - Math.PI / 2);
 		var	y = 100 * Math.sin(cart.pole.angle - Math.PI / 2);
 
 		context.beginPath();
-		context.moveTo(cart.position + 30, canvas.height - 80);
-		context.lineTo(cart.position + 30 + x, canvas.height - 80 + y);
+		context.moveTo(cart.position + cart.width / 2, canvas.height - 80);
+		context.lineTo(cart.position + cart.width / 2 + x, canvas.height - 80 + y);
 		context.stroke();
 	}
 
 	function drawBackground () {
 		context.clearRect(0, 0, canvas.width, canvas.height);
-		context.fillRect(0, canvas.height - 20, canvas.width, 5);
-		context.fillRect(0, canvas.height - 200, 5, 180);
-		context.fillRect(canvas.width - 5, canvas.height - 200, 5, 180);
+		context.beginPath();
+		context.moveTo(context.lineWidth / 2, 0);
+		context.lineTo(context.lineWidth / 2, canvas.height - 20);
+		context.lineTo(canvas.width - context.lineWidth / 2, canvas.height - 20);
+		context.lineTo(canvas.width - context.lineWidth / 2, 0);
+		context.stroke();
 	}
 
 	var target = document.getElementById('code');
-	var editor = CodeMirror.fromTextArea(target, {
-        lineNumbers: true
-    });
+	var editor = CodeMirror.fromTextArea(target, { lineNumbers: true });
 
 	drawFrame(cart);
 	$('#start').click(() => {
 		// Get the code from the editor:
 		var code = editor.getValue();
+		// Create a global state object for the user to attach things to:
 		window.state = window.state || {};
+		// Use the code to create a new function which will get our force:
 		var controller = new Function('angle', 'angleRate', 'cartPosition', 'cartVelocity', code);
+
+		// Update the UI
 		$('#left,#right').removeAttr('disabled');
-		elapsed = 0;
+
+		// Clear the variables ready for the next stage:
 		clearTimeout(timeout);
+		elapsed = 0;
 		nudge = 0;
-		cart.position = windowWidth/2 - 90;
+		cart.position = canvasWidth / 2 - cart.width / 2;
 		cart.velocity = 0;
 		cart.acceleration = 0;
 		cart.pole.angle = 0.1 * (Math.random() - 0.5);
 		cart.pole.velocity = 0;
 		cart.pole.acceleration = 0;
+
+		// Kick off the animation
 		animate(cart, controller);
 	});
 
