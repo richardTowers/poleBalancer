@@ -75,6 +75,8 @@ class Cart {
 declare var $: any;
 $(function () {
 	'use strict';
+
+	var elapsed = 0;
 	var windowWidth = $(window).width();
 	var windowHeight = $(window).height();
 
@@ -130,7 +132,13 @@ $(function () {
 	function animate (cart: Cart) {
 		drawFrame(cart);
 		cart.tick(force);
-		setTimeout(() => { animate(cart); }, Math.round(1000*timestep));
+		elapsed += timestep;
+		if(cart.pole.angle > Math.PI/2 || cart.pole.angle < -Math.PI/2 ) {
+			window.alert('FAIL! You lasted ' + Math.round(elapsed) + ' seconds');
+		}
+		else {
+			setTimeout(() => { animate(cart); }, Math.round(1000*timestep));
+		}
 	}
 
 	function drawFrame (cart: Cart) {

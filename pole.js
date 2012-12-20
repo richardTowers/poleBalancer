@@ -44,6 +44,7 @@ var Cart = (function () {
 })();
 $(function () {
     'use strict';
+    var elapsed = 0;
     var windowWidth = $(window).width();
     var windowHeight = $(window).height();
     $('#cart').attr('width', (windowWidth - 40) + 'px');
@@ -77,9 +78,14 @@ $(function () {
     function animate(cart) {
         drawFrame(cart);
         cart.tick(force);
-        setTimeout(function () {
-            animate(cart);
-        }, Math.round(1000 * timestep));
+        elapsed += timestep;
+        if(cart.pole.angle > Math.PI / 2 || cart.pole.angle < -Math.PI / 2) {
+            window.alert('FAIL! You lasted ' + Math.round(elapsed) + ' seconds');
+        } else {
+            setTimeout(function () {
+                animate(cart);
+            }, Math.round(1000 * timestep));
+        }
     }
     function drawFrame(cart) {
         drawBackground();
