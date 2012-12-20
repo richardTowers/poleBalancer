@@ -75,6 +75,9 @@ class Cart {
 }
 
 declare var $: any;
+declare var CodeMirror: any;
+interface Window { state: any; }
+
 $(() => {
 	'use strict';
 
@@ -113,27 +116,28 @@ $(() => {
 	context.fillStyle = 'rgb(0,0,0)';
 	context.lineWidth = 3;
 
-	var force = 0;
+	var nudge = 0;
 
 	var timeout;
 	
-	$(document).keydown((e) => { if (e.keyCode == 37) { force = -100; }	});
-	$(document).keydown((e) => { if (e.keyCode == 39) { force = 100; } });
-	$(document).keyup(() => { force = 0; });
+	$(document).keydown((e) => { if (e.keyCode == 37) { nudge = -100; }	});
+	$(document).keydown((e) => { if (e.keyCode == 39) { nudge = 100; } });
+	$(document).keyup(() => { nudge = 0; });
 
-	$('#left').bind('touchstart mousedown', () => { force = -100; });
-	$('#right').bind('touchstart mousedown', () => { force = 100; });
-	$('#left,#right').bind('touchend mouseup', () => { force = 0; });
+	$('#left').bind('touchstart mousedown', () => { nudge = -100; });
+	$('#right').bind('touchstart mousedown', () => { nudge = 100; });
+	$('#left,#right').bind('touchend mouseup', () => { nudge = 0; });
 
-	function animate (cart: Cart) {
+	function animate (cart: Cart, controller: any) {
 		drawFrame(cart);
+		var force = nudge + controller(cart.pole.angle, cart.pole.velocity, cart.position - canvasWidth/2, cart.velocity);
 		cart.tick(force);
 		elapsed += timestep;
 		if(cart.pole.angle > Math.PI/2 || cart.pole.angle < -Math.PI/2 ) {
 			window.alert('FAIL! You lasted ' + Math.round(elapsed) + ' seconds');
 		}
 		else {
-			timeout = setTimeout(() => { animate(cart); }, Math.round(1000*timestep));
+			timeout = setTimeout(() => { animate(cart, controller); }, Math.round(1000*timestep));
 		}
 	}
 
@@ -157,19 +161,28 @@ $(() => {
 		context.fillRect(canvas.width - 5, canvas.height - 200, 5, 180);
 	}
 
+	var target = document.getElementById('code');
+	var editor = CodeMirror.fromTextArea(target, {
+        lineNumbers: true
+    });
+
 	drawFrame(cart);
 	$('#start').click(() => {
+		// Get the code from the editor:
+		var code = editor.getValue();
+		window.state = window.state || {};
+		var controller = new Function('angle', 'angleRate', 'cartPosition', 'cartVelocity', code);
 		$('#left,#right').removeAttr('disabled');
 		elapsed = 0;
 		clearTimeout(timeout);
-		force = 0;
+		nudge = 0;
 		cart.position = windowWidth/2 - 90;
 		cart.velocity = 0;
 		cart.acceleration = 0;
 		cart.pole.angle = 0.1 * (Math.random() - 0.5);
 		cart.pole.velocity = 0;
 		cart.pole.acceleration = 0;
-		animate(cart);
+		animate(cart, controller);
 	});
 
 });

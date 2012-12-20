@@ -61,39 +61,40 @@ $(function () {
     var context = canvas.getContext('2d');
     context.fillStyle = 'rgb(0,0,0)';
     context.lineWidth = 3;
-    var force = 0;
+    var nudge = 0;
     var timeout;
     $(document).keydown(function (e) {
         if(e.keyCode == 37) {
-            force = -100;
+            nudge = -100;
         }
     });
     $(document).keydown(function (e) {
         if(e.keyCode == 39) {
-            force = 100;
+            nudge = 100;
         }
     });
     $(document).keyup(function () {
-        force = 0;
+        nudge = 0;
     });
     $('#left').bind('touchstart mousedown', function () {
-        force = -100;
+        nudge = -100;
     });
     $('#right').bind('touchstart mousedown', function () {
-        force = 100;
+        nudge = 100;
     });
     $('#left,#right').bind('touchend mouseup', function () {
-        force = 0;
+        nudge = 0;
     });
-    function animate(cart) {
+    function animate(cart, controller) {
         drawFrame(cart);
+        var force = nudge + controller(cart.pole.angle, cart.pole.velocity, cart.position - canvasWidth / 2, cart.velocity);
         cart.tick(force);
         elapsed += timestep;
         if(cart.pole.angle > Math.PI / 2 || cart.pole.angle < -Math.PI / 2) {
             window.alert('FAIL! You lasted ' + Math.round(elapsed) + ' seconds');
         } else {
             timeout = setTimeout(function () {
-                animate(cart);
+                animate(cart, controller);
             }, Math.round(1000 * timestep));
         }
     }
@@ -113,18 +114,26 @@ $(function () {
         context.fillRect(0, canvas.height - 200, 5, 180);
         context.fillRect(canvas.width - 5, canvas.height - 200, 5, 180);
     }
+    var target = document.getElementById('code');
+    var editor = CodeMirror.fromTextArea(target, {
+        lineNumbers: true
+    });
     drawFrame(cart);
     $('#start').click(function () {
+        var code = editor.getValue();
+        window.state = window.state || {
+        };
+        var controller = new Function('angle', 'angleRate', 'cartPosition', 'cartVelocity', code);
         $('#left,#right').removeAttr('disabled');
         elapsed = 0;
         clearTimeout(timeout);
-        force = 0;
+        nudge = 0;
         cart.position = windowWidth / 2 - 90;
         cart.velocity = 0;
         cart.acceleration = 0;
         cart.pole.angle = 0.1 * (Math.random() - 0.5);
         cart.pole.velocity = 0;
         cart.pole.acceleration = 0;
-        animate(cart);
+        animate(cart, controller);
     });
 });

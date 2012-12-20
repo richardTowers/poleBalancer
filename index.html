@@ -4,8 +4,7 @@
 		<title>Balance the poll!</title>
 		<link rel="stylesheet" href="styles/lib/bootstrap.min.css">
 		<link rel="stylesheet" href="styles/pole.css">
-		<script src="scripts/lib/jquery.js"></script>
-		<script src="scripts/pole.js"></script>
+		<link rel="stylesheet" href="styles/lib/codemirror.css">
 	</head>
 	<body>
 		<div class="navbar navbar-fixed-top">
@@ -29,7 +28,27 @@
 				<input type="button" class="btn btn-success" value="right" id="right" disabled>
 			</fieldset>
 			
-			<textarea id="code" cols="30" rows="10"></textarea>
+<textarea id="code" cols="30" rows="10">// Your code will be called on each timestep.
+// You can use the following variables:
+//      angle (in radians, 0 is vertical)
+//      angleRate (in radians per second)
+//      cartPosition (in pixels)
+//      cartVelocity (in pixels per second, 0 is the center)
+// Simply return a force to apply to the cart. Negative to push it left, positive to push it right.
+
+// If you need to hold on to some state you can use the global `state` variable. For example:
+//      state.property = state.property || 1;
+//      state.property++;
+
+// You're also free to use methods like console.log() to help you out, if your browser supports them.
+
+// Simple example:
+return 100*angle;</textarea>
 		</div>
+		<script src="scripts/lib/jquery.js"></script>
+		<script src="scripts/lib/codemirror.js"></script>
+		<script src="scripts/lib/javascript/javascript.js"></script>
+		<script src="scripts/lib/bootstrap.min.js"></script>
+		<script src="scripts/pole.js"></script>
 	</body>
 </html>
