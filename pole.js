@@ -62,10 +62,19 @@ $(function () {
     context.fillStyle = 'rgb(0,0,0)';
     context.lineWidth = 3;
     var force = 0;
+    var timeout;
     $(document).keydown(function (e) {
         if(e.keyCode == 37) {
             force = -100;
         }
+    });
+    $(document).keydown(function (e) {
+        if(e.keyCode == 39) {
+            force = 100;
+        }
+    });
+    $(document).keyup(function (e) {
+        force = 0;
     });
     $('#left').mousedown(function () {
         force = -100;
@@ -76,14 +85,7 @@ $(function () {
     $('#left,#right').mouseup(function () {
         force = 0;
     });
-    $(document).keydown(function (e) {
-        if(e.keyCode == 39) {
-            force = 100;
-        }
-    });
-    $(document).keyup(function (e) {
-        force = 0;
-    });
+    $('#left').on();
     function animate(cart) {
         drawFrame(cart);
         cart.tick(force);
@@ -91,7 +93,7 @@ $(function () {
         if(cart.pole.angle > Math.PI / 2 || cart.pole.angle < -Math.PI / 2) {
             window.alert('FAIL! You lasted ' + Math.round(elapsed) + ' seconds');
         } else {
-            setTimeout(function () {
+            timeout = setTimeout(function () {
                 animate(cart);
             }, Math.round(1000 * timestep));
         }
@@ -112,5 +114,17 @@ $(function () {
         context.fillRect(0, canvas.height - 200, 5, 180);
         context.fillRect(canvas.width - 5, canvas.height - 200, 5, 180);
     }
-    animate(cart);
+    drawFrame(cart);
+    $('#start').click(function () {
+        $('#left,#right').removeAttr('disabled');
+        clearTimeout(timeout);
+        force = 0;
+        cart.position = windowWidth / 2 - 90;
+        cart.velocity = 0;
+        cart.acceleration = 0;
+        cart.pole.angle = 0.1 * (Math.random() - 0.5);
+        cart.pole.velocity = 0;
+        cart.pole.acceleration = 0;
+        animate(cart);
+    });
 });

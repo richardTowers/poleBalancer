@@ -65,10 +65,10 @@ class Cart {
 		// x'' = --------------------------------------------
 		//                       m(c) + m(p)
 
-		 var top = force + this.pole.mass + this.pole.length *
-		 	(this.pole.velocity * this.pole.velocity * Math.sin(this.pole.angle) - this.pole.acceleration * Math.cos(this.pole.angle));
+		var top = force + this.pole.mass + this.pole.length *
+			(this.pole.velocity * this.pole.velocity * Math.sin(this.pole.angle) - this.pole.acceleration * Math.cos(this.pole.angle));
 
-		 var bottom = this.mass + this.pole.mass;
+		var bottom = this.mass + this.pole.mass;
 
 		return top / bottom;
 	}
@@ -114,16 +114,14 @@ $(function () {
 	context.lineWidth = 3;
 
 	var force = 0;
+
+	var timeout;
 	
 	$(document).keydown(function(e){
 	    if (e.keyCode == 37) { 
 	       force = -100;
 	    }
 	});
-
-	$('#left').mousedown(function () {force = -100;});
-	$('#right').mousedown(function () {force = 100;});
-	$('#left,#right').mouseup(function () {force = 0;});
 
 	$(document).keydown(function(e){
 	    if (e.keyCode == 39) { 
@@ -135,6 +133,12 @@ $(function () {
 	    force = 0;
 	});
 
+	$('#left').mousedown(function () {force = -100;});
+	$('#right').mousedown(function () {force = 100;});
+	$('#left,#right').mouseup(function () {force = 0;});
+
+	$('#left').on()
+
 	function animate (cart: Cart) {
 		drawFrame(cart);
 		cart.tick(force);
@@ -143,7 +147,7 @@ $(function () {
 			window.alert('FAIL! You lasted ' + Math.round(elapsed) + ' seconds');
 		}
 		else {
-			setTimeout(() => { animate(cart); }, Math.round(1000*timestep));
+			timeout = setTimeout(() => { animate(cart); }, Math.round(1000*timestep));
 		}
 	}
 
@@ -167,6 +171,18 @@ $(function () {
 		context.fillRect(canvas.width - 5, canvas.height - 200, 5, 180);
 	}
 
-	animate(cart);
+	drawFrame(cart);
+	$('#start').click(function () {
+		$('#left,#right').removeAttr('disabled');
+		clearTimeout(timeout);
+		force = 0;
+		cart.position = windowWidth/2 - 90;
+		cart.velocity = 0;
+		cart.acceleration = 0;
+		cart.pole.angle = 0.1 * (Math.random() - 0.5);
+		cart.pole.velocity = 0;
+		cart.pole.acceleration = 0;
+		animate(cart);
+	});
 
 });
