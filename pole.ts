@@ -160,6 +160,7 @@ $(() => {
 	drawFrame(cart);
 	$('#start').click(() => {
 		$('#left,#right').removeAttr('disabled');
+		elapsed = 0;
 		clearTimeout(timeout);
 		force = 0;
 		cart.position = windowWidth/2 - 90;
