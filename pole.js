@@ -73,19 +73,18 @@ $(function () {
             force = 100;
         }
     });
-    $(document).keyup(function (e) {
+    $(document).keyup(function () {
         force = 0;
     });
-    $('#left').mousedown(function () {
+    $('#left').bind('touchstart mousedown', function () {
         force = -100;
     });
-    $('#right').mousedown(function () {
+    $('#right').bind('touchstart mousedown', function () {
         force = 100;
     });
-    $('#left,#right').mouseup(function () {
+    $('#left,#right').bind('touchend mouseup', function () {
         force = 0;
     });
-    $('#left').on();
     function animate(cart) {
         drawFrame(cart);
         cart.tick(force);

@@ -75,7 +75,7 @@ class Cart {
 }
 
 declare var $: any;
-$(function () {
+$(() => {
 	'use strict';
 
 	var elapsed = 0;
@@ -117,27 +117,13 @@ $(function () {
 
 	var timeout;
 	
-	$(document).keydown(function(e){
-	    if (e.keyCode == 37) { 
-	       force = -100;
-	    }
-	});
+	$(document).keydown((e) => { if (e.keyCode == 37) { force = -100; }	});
+	$(document).keydown((e) => { if (e.keyCode == 39) { force = 100; } });
+	$(document).keyup(() => { force = 0; });
 
-	$(document).keydown(function(e){
-	    if (e.keyCode == 39) { 
-	       force = 100;
-	    }
-	});
-
-	$(document).keyup(function(e){
-	    force = 0;
-	});
-
-	$('#left').mousedown(function () {force = -100;});
-	$('#right').mousedown(function () {force = 100;});
-	$('#left,#right').mouseup(function () {force = 0;});
-
-	$('#left').on()
+	$('#left').bind('touchstart mousedown', () => { force = -100; });
+	$('#right').bind('touchstart mousedown', () => { force = 100; });
+	$('#left,#right').bind('touchend mouseup', () => { force = 0; });
 
 	function animate (cart: Cart) {
 		drawFrame(cart);
@@ -172,7 +158,7 @@ $(function () {
 	}
 
 	drawFrame(cart);
-	$('#start').click(function () {
+	$('#start').click(() => {
 		$('#left,#right').removeAttr('disabled');
 		clearTimeout(timeout);
 		force = 0;
