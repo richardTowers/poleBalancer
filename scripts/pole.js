@@ -87,11 +87,28 @@ $(function () {
     var timeout;
     function animate(cart, controller) {
         drawFrame(cart);
-        var force = nudge + controller(cart.pole.angle, cart.pole.velocity, cart.position - canvasWidth / 2, cart.velocity);
+        try  {
+            var force = controller(cart.pole.angle, cart.pole.velocity, cart.position - canvasWidth / 2, cart.velocity);
+            if(typeof force !== 'number') {
+                throw 'User calculated force "' + force + '" should have been of type "number" not "' + typeof force + '".';
+            }
+            if(!isFinite(force)) {
+                throw 'User calculated force "' + force + '" was not a finite number.';
+            }
+            force += nudge;
+        } catch (ex) {
+            if(typeof timeout !== 'undefined') {
+                clearTimeout(timeout);
+            }
+            $('.failTime').text(Math.round(elapsed));
+            $('#errorInfo').text(ex);
+            $('#errorModal').modal();
+            return;
+        }
         cart.tick(force);
         elapsed += timestep;
         if(cart.position < 0 || cart.position + cart.width > canvasWidth || cart.pole.angle > Math.PI / 2 || cart.pole.angle < -Math.PI / 2) {
-            $('#failTime').text(Math.round(elapsed));
+            $('.failTime').text(Math.round(elapsed));
             $('#failModal').modal();
         } else {
             timeout = setTimeout(function () {

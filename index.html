@@ -37,8 +37,8 @@
 // You can use the following variables:
 //      angle (in radians, 0 is vertical)
 //      angleRate (in radians per second)
-//      cartPosition (in pixels)
-//      cartVelocity (in pixels per second, 0 is the center)
+//      cartPosition (in pixels, 0 is the center)
+//      cartVelocity (in pixels per second)
 // Simply return a force to apply to the cart. Negative to push it left, positive to push it right.
 
 // If you need to hold on to some state you can use the global `state` variable. For example:
@@ -57,7 +57,21 @@ return 0;</textarea>
 			</div>
 			<div class="modal-body">
 				<h4>Your skill is not enough, see you next time, bye-bye!</h4>
-				<p>You lasted <span id="failTime"></span> seconds.</p>
+				<p>You lasted <span class="failTime"></span> seconds.</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Close</button>
+			</div>
+		</div>
+		<div id="errorModal" class="modal hide" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="myModalLabel">You fail it!</h3>
+			</div>
+			<div class="modal-body">
+				<h4>Your skill is not enough, see you next time, bye-bye!</h4>
+				<p>Your code errored after <span class="failTime"></span> seconds.</p>
+				<code id="errorInfo"></code>
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Close</button>
